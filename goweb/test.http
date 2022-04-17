@@ -1,0 +1,9 @@
+
+curl --location --request POST 'http://localhost:8080/api/images' 
+\
+--header 'Content-Type: application/json' \
+--data-raw '{
+}' | jq -r
+
+
+  # curl -v -sX DELETE http://localhost:8080/images/c9dd2ib9i8bnko0b8ipg | jq -r
