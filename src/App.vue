@@ -21,12 +21,14 @@
     </div>
     <button @click="capture">capture</button>
     <button @click="show">show</button>
-    <div>
-      <img :src="require('@/assets/imgs'+item.slice(1))" alt="" v-for="(item,index) in imgList" :key="index" />
-      <button>Delete</button>
+    <div v-for="(item,index) in imgList" :key="index">
+      <div>
+        <img :src="require('@/assets/imgs'+item.slice(1))" alt=""  />
+        
+      </div>
+      <button @click="removeImg(index)">Delete</button>
     </div>
-     <div>
-    </div>
+    
   </div>
    
 </template>
@@ -38,7 +40,7 @@
 import MyHeader from "./components/MyHeader";
 // import MyList from "./components/MyList";
 import MyFooter from "./components/MyFooter";
-import {captureNewImage} from '@/api';
+import {captureNewImage, captureDeleteImage} from '@/api';
 export default {
   name: "App",
   components: {
@@ -58,6 +60,12 @@ export default {
     };
   },
   methods:{
+    removeImg: function (index) {
+      let fileName = this.imgList[index]
+      let newfileName = fileName.substring(0,fileName.lastIndexOf('.'))
+      let resdata = captureDeleteImage(newfileName);
+      console.log(resdata);
+    },
     show () {
       const files = require.context("@/assets/imgs", true, /\.*\.jpg|jpeg|png$/).keys();
       this.imgList = files;

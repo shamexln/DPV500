@@ -57,11 +57,13 @@ func GetWindowDimensions(hwnd HWND) *RECT {
 }
 
 func SetWindowPos(hwnd HWND, cx int32, cy int32) HWND {
-	dd := -1
+	//dd := 1
+
 	ret, _, err := syscall.SyscallN(
 		setWindowPos,
 		uintptr(hwnd),
-		uintptr(unsafe.Pointer(&dd)),
+		//uintptr(unsafe.Pointer(&dd)),
+		uintptr(0),
 		uintptr(0),
 		uintptr(0),
 		uintptr(cx),
@@ -87,17 +89,15 @@ func (c Capture) CaptureImage(imgFileName string) {
 	defer syscall.FreeLibrary(user32)
 
 	hwnd := FindWindowByTitle("DraegerEIT")
+	//hwnd := FindWindowByTitle("计算器")
 	fmt.Printf("Return: %d\n", hwnd)
 	var rect *RECT
 	if hwnd > 0 {
 		rect = GetWindowDimensions(hwnd)
-		fmt.Printf("Return: %v\n", rect)
-		hwnd1 := SetWindowPos(hwnd, rect.Right-rect.Left, rect.Bottom-rect.Top)
-		fmt.Printf("Return: %d\n", hwnd1)
-		rect = GetWindowDimensions(hwnd)
-		fmt.Printf("Return new rect: %v\n", rect)
+
 		rtnv := SetForegroundWindow(hwnd)
 		fmt.Printf("Return: %v\n", rtnv)
+		SetWindowPos(hwnd, rect.Right-rect.Left, rect.Bottom-rect.Top)
 
 	}
 
@@ -149,5 +149,17 @@ func (c Capture) CaptureImage(imgFileName string) {
 func (c Capture) DeleteImage(imgFileName string) {
 
 	fileName := fmt.Sprintf("%s.png", imgFileName)
-	_ = os.Remove(fileName)
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println(pwd)
+	index := strings.Index(pwd, "goweb")
+	pwd = pwd[:index]
+	pwd = strings.TrimSuffix(pwd, "\\")
+
+	newpath := filepath.Join(pwd, "src", "assets", "imgs", fileName)
+	fmt.Println(newpath)
+	_ = os.Remove(newpath)
 }
