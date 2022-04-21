@@ -1,9 +1,10 @@
 <template>
-  <div>
-      <input type="checkbox" v-model="isAll"/>
-      <span>
-			<span>已完成{{doneTotal}}</span> / 全部{{total}}
-      </span>
+  <div class="field">
+  <label>报告总结</label>
+  <br/>
+
+  <textarea cols="150" rows="10" v-model="msg"></textarea>
+      
   </div>
 </template>
 
@@ -27,5 +28,7 @@ export default {
 </script>
 
 <style>
+.field {
 
+}
 </style>
